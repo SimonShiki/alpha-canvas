@@ -7,8 +7,14 @@ class CanvasEngine {
         this.initialize();
     }
 
+    shouldCreatePenLayer () {
+        if (this._penSkinId < 0) return true;
+        if (!this.runtime.renderer._allSkins[this._penSkinId]) return true;
+        return false;
+    }
+
     get penSkinId () {
-        if (this._penSkinId < 0 && this.runtime.renderer) {
+        if (this.shouldCreatePenLayer() && this.runtime.renderer) {
             this._penSkinId = this.runtime.renderer.createPenSkin();
             this._penDrawableId = this.runtime.renderer.createDrawable(StageLayering.PEN_LAYER);
             this.runtime.renderer.updateDrawableSkinId(this._penDrawableId, this._penSkinId);

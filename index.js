@@ -285,7 +285,14 @@ class Canvas extends Extension {
                     const y = Cast.toNumber(args.Y);
                 
                     const img = this._bufferedImages[args.IMAGE_ID];
-                    if (!img) return;
+                    if (!img) {
+                        if (parseInt(args.IMAGE_ID) === NaN) return;
+                        // 进行一个图层的绘制
+                        if (this.canvasEngine._drawable.hasOwnProperty(args.IMAGE_ID)) {
+                            const drawable = this.canvasEngine._drawable[args.IMAGE_ID];
+                            ctx.drawImage(drawable.canvas, x, y);
+                        }
+                    };
                     ctx.drawImage(img, x, y);
                 } catch (e) {
                     console.error(e);

@@ -1,0 +1,7 @@
+[
+    {
+        "id": "hqpen",
+        "type": "boolean",
+        "default": false
+    }
+]

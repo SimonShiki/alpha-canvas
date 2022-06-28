@@ -1,10 +1,11 @@
 const { Extension, type, api } = require('clipcc-extension');
 const CanvasEngine = require('./canvas-engine.js');
 const Cast = require('./cast.js');
-class MyExtension extends Extension {
+class Canvas extends Extension {
     onInit() {
         const { runtime } = api.getVmInstance();
         this.canvasEngine = new CanvasEngine(runtime);
+        this._bufferedImages = [];
 
         api.addCategory({
             categoryId: 'alpha.canvas.category',
@@ -237,12 +238,24 @@ class MyExtension extends Extension {
             param: {
                 IMAGE_ID: {
                     type: type.ParameterType.STRING,
-                    default: 'UNAVAILABLE'
+                    default: 'c6b1479621329fac5f2f8321678cc8d9'
                 }
             },
             function: (args, util) => {
-                console.warn('For legal reasons, the image cannot be loaded.');
-                return ;
+                return new Promise(resolve => {
+                    // 设置回调后从资源服务器加载图片
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => {
+                        this._bufferedImages[args.IMAGE_ID] = img;
+                        resolve();
+                    }
+                    img.onerror = (e) => {
+                        console.error('error occurred while loading image', e);
+                        resolve();
+                    }
+                    img.src = `https://api.codingclip.com/v1/project/asset/${args.IMAGE_ID}`;
+                });
             }
         });
         api.addBlock({
@@ -253,7 +266,7 @@ class MyExtension extends Extension {
             param: {
                 IMAGE_ID: {
                     type: type.ParameterType.STRING,
-                    default: 'UNAVAILABLE'
+                    default: 'c6b1479621329fac5f2f8321678cc8d9'
                 },
                 X: {
                     type: type.ParameterType.NUMBER,
@@ -265,8 +278,18 @@ class MyExtension extends Extension {
                 }
             },
             function: (args, util) => {
-                console.warn('For legal reasons, the image cannot be loaded.');
-                return;
+                try {
+                    const canvas = this.canvasEngine.getDrawable();
+                    const ctx = canvas.getContext('2d');
+                    const x = Cast.toNumber(args.X);
+                    const y = Cast.toNumber(args.Y);
+                
+                    const img = this._bufferedImages[args.IMAGE_ID];
+                    if (!img) return;
+                    ctx.drawImage(img, x, y);
+                } catch (e) {
+                    console.error(e);
+                }
             }
         });
         api.addBlock({
@@ -752,4 +775,4 @@ class MyExtension extends Extension {
     }
 }
 
-module.exports = MyExtension;
+module.exports = Canvas;

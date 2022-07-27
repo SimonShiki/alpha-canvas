@@ -59,13 +59,13 @@ class CanvasEngine {
      * @returns {Canvas} 画布
      * @throws {Error} 如果id不存在则抛出异常
      */
-    getDrawable () {
-        if (!this._drawable[this.currentId]) {
+    getDrawable (id = this.currentId) {
+        if (!this._drawable[id]) {
             const canvas = this.createCanvas();
             if (!canvas) throw new Error("CanvasEngine: Can't create canvas");
-            this._drawable[this.currentId] = canvas;
+            this._drawable[id] = canvas;
         }
-        return this._drawable[this.currentId];
+        return this._drawable[id];
     }
 
     /**

@@ -2,7 +2,6 @@
     "alpha.canvas.name": "cαnvas",
     "alpha.canvas.description": "Use canvas to empower Pen and be fully compatible with Aerfaying.",
     "alpha.canvas.category": "cαnvas",
-    "alpha.canvas.settings.hqpen": "High-Quality Cαnvas (Experimental)",
     "alpha.canvas.beginPath": "beginPath",
     "alpha.canvas.closePath": "closePath",
     "alpha.canvas.moveTo": "moveTo([X],[Y])",

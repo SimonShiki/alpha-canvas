@@ -292,7 +292,7 @@ class Canvas extends Extension {
                             const targetDrawable = this.canvasEngine.getDrawable(Cast.toNumber(args.IMAGE_ID));
                             ctx.drawImage(targetDrawable, x, y);
                         }
-                    };
+                    }
                     ctx.drawImage(img, x, y);
                 } catch (e) {
                     console.error(e);
@@ -767,11 +767,11 @@ class Canvas extends Extension {
 
     beforeProjectLoadExtension (data, extensions) {
         if (extensions.hasOwnProperty('canvas')) {
-            console.log('Let\'s convert it!');
+            // console.log('Let\'s convert it!');
             delete extensions.canvas;
             for (const i in data) {
                 let targetBlocks = data[i].blocks._blocks;
-                console.log("处理角色（编号：" + i + "）中...", targetBlocks);
+                // console.log("处理角色（编号：" + i + "）中...", targetBlocks);
                 for (let blockId in targetBlocks) {
                     if (targetBlocks[blockId].opcode.startsWith("canvas"))
                         targetBlocks[blockId].opcode = targetBlocks[blockId].opcode.replace("canvas_", "alpha.canvas.");
